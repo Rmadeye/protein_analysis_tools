@@ -22,7 +22,6 @@ class RunRosetta:
         outpath = os.path.dirname(out_file)
 
         assert os.path.isfile(pdb_file), f"PDB file {pdb_file} does not exist"
-        assert not os.path.isfile(out_file), f"Output file {out_file} already exists"
 
         command = f"{self.bin_dir}/minimize.linuxgccrelease -s {pdb_file} -out:file:scorefile score_minim.sc -ignore_zero_occupancy false \
 -relax:constrain_relax_to_start_coords -relax:default_repeats 5 -relax:ramp_constraints false -in:file:fullatom -ex1 -ex2 -nstruct 1 {extra_flags} -o {os.path.join(outpath,out_file)}"
@@ -33,17 +32,16 @@ class RunRosetta:
         pdb_file: str,
         out_file: str,
         interchain_interface: list,
-        output_scorefile_path: str,
         extra_flags: str = "",
     ) -> None:
         """
         Run interface analysis on a pdb file
         """
         assert os.path.isfile(pdb_file), f"PDB file {pdb_file} does not exist"
-        assert not os.path.isfile(out_file), f"Output file {out_file} already exists"
 
 
-        command = f"{self.bin_dir}/InterfaceAnalyzer.linuxgccrelease -s {pdb_file} -o {out_file} -interface {'_'.join(interchain_interface)} -pack_separated {extra_flags} -out:file:score_only -out:file:scorefile {output_scorefile_path}"
+
+        command = f"{self.bin_dir}/InterfaceAnalyzer.linuxgccrelease -s {pdb_file} -interface {'_'.join(interchain_interface)} -pack_separated {extra_flags} -out:file:score_only -out:file:scorefile {out_file}"
         subprocess.run(command, shell=True, check=True)
 
     def run_residue_energy_breakdown(
@@ -53,7 +51,6 @@ class RunRosetta:
         Run decomposition on a pdb file
         """
         assert os.path.isfile(pdb_file), f"PDB file {pdb_file} does not exist"
-        assert not os.path.isfile(out_file), f"Output file {out_file} already exists"
 
         command = f"{self.bin_dir}/residue_energy_breakdown.linuxgccrelease -s {pdb_file} -out:file:silent {out_file}_decomposition.out {extra_flags}"
         subprocess.run(command, shell=True, check=True)

@@ -75,6 +75,6 @@ class USalign_parser:
         return self.df.sort_values(by=column, ascending=ascending).head(n)
 
 
-test = "/home/rmadeye/scripts/protein_analysis_tools/tools/usalign/usalign_output.txt"
+# test = "/home/rmadeye/scripts/protein_analysis_tools/tools/usalign/usalign_output.txt"
 
-print(USalign_parser(test).read_usalign_output())
+# print(USalign_parser(test).read_usalign_output())
