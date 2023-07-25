@@ -3,25 +3,78 @@ from typing import Union
 
 import pandas as pd
 
+import os
+import pandas as pd
+from typing import Union
+
+
 class USalign_parser:
-    def __init__(self, usalign_output: Union[os.PathLike, str, pd.DataFrame]) -> None:
-        # self.usalign_output = usalign_output
-        # if isinstance(self.usalign_output, os.PathLike or str):
+    def __init__(self, user_input: Union[str, pd.DataFrame]) -> None:
+        """
+        Initialize the USalign_parser object.
 
-        #     assert os.path.exists(usalign_output), 'Invalid path or file does not exist'
-            # load the file skipping each second line apart from first one
-        self.usalign_output = pd.read_csv(usalign_output, sep='\s+', skiprows=lambda x: x % 2 != 0)
+        Parameters:
+            user_input (Union[str, pd.DataFrame]): Either the path to the USAlign output file (CSV format)
+                                                  or a pandas DataFrame containing USAlign results.
 
+        Returns:
+            None
+        """
+        if isinstance(user_input, str):
+            assert os.path.exists(user_input), "Invalid path or file does not exist"
+            self.df = pd.read_csv(
+                user_input,
+                sep="\s+",
+                skiprows=lambda x: x % 2 != 1,
+                names=[
+                    "target",
+                    "template",
+                    "tm1",
+                    "tm2",
+                    "rmsd",
+                    "id1",
+                    "id2",
+                    "idali",
+                    "docked_seqlength",
+                    "template_seqlength",
+                    "aligned_length",
+                ],
+            ).reset_index(drop=True)
+            assert self.df.shape[0] > 0, "Empty dataframe"
+        elif isinstance(user_input, pd.DataFrame):
+            self.df = user_input
 
     def read_usalign_output(self):
         """
-        Rename the paths to pdb names
-        """
-        # self.usalign_output['reference'] = self.usalign_output['reference'].str.split('/').str[-1]
-        # self.usalign_output['target'] = self.usalign_output['target'].str.split('/').str[-1]
-        return self.usalign_output
-    
+        Process the USAlign output DataFrame and extract relevant information.
 
-test = '/home/rmadeye/scripts/protein_analysis_tools/tools/usalign/usalign_output.txt'
+        Returns:
+            pd.DataFrame: The processed DataFrame with additional columns.
+        """
+        self.df["target_path"] = self.df["target"]
+        self.df["target"] = (
+            self.df["target"].str.split("/").str[-1].str.split(".").str[0]
+        )
+
+        return self.df
+
+    def get_top_n_by_selected_column(
+        self, column: str, n: int = 10, ascending: bool = False
+    ):
+        """
+        Get the top or bottom 'n' rows based on the values in the specified 'column'.
+
+        Parameters:
+            column (str): The column name based on which to select the top or bottom 'n' rows.
+            n (int): The number of rows to select (default: 10).
+            ascending (bool): If True, select the top 'n' rows; otherwise, select the bottom 'n' rows (default: False).
+
+        Returns:
+            pd.DataFrame: A DataFrame containing the top or bottom 'n' rows based on the specified 'column'.
+        """
+        return self.df.sort_values(by=column, ascending=ascending).head(n)
+
+
+test = "/home/rmadeye/scripts/protein_analysis_tools/tools/usalign/usalign_output.txt"
 
 print(USalign_parser(test).read_usalign_output())
