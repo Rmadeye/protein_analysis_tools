@@ -2,3 +2,5 @@ __pycache__/
 *ipynb
 amber_csvs/
 test.csv
+tools/__pycache__
+.pytest_cache/
