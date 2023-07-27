@@ -1,11 +1,13 @@
 import numpy as np
-import os
+import sys
 import glob
 
 import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
 from matplotlib.pyplot import figure
+
+sys.path.append("tools/amber")
 
 import analyze_csv as ac
 

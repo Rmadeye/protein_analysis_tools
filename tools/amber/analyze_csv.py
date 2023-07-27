@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 
+
 class ProcessAmber:
     """
     Class to process Amber simulation data from a CSV file.
@@ -41,10 +42,12 @@ class ProcessAmber:
             self.df.shape[0] % self.number_of_reps == 0
         ), "Number of rows in csv is not divisible by number of reps, check sim length"
         # assert that sim_length /  timestep * 1000 *  number_of_reps + number_of_reps is equal to number of rows in csv
-        frame_numer_expected  =  (self.sim_length / timestep) * 1000 / trajectory_dump_frequency * self.number_of_reps  + 10
-        assert frame_numer_expected == self.df.shape[
-            0
-        ], f"Number of rows in csv is not equal to sim_length / timestep * 1000 * number_of_reps + number_of_reps  in {input_csv}. {frame_numer_expected} != {self.df.shape[0]}"
+        frame_numer_expected = (
+            self.sim_length / timestep
+        ) * 1000 / trajectory_dump_frequency * self.number_of_reps + 10
+        assert (
+            frame_numer_expected == self.df.shape[0]
+        ), f"Number of rows in csv is not equal to sim_length / timestep * 1000 * number_of_reps + number_of_reps  in {input_csv}. {frame_numer_expected} != {self.df.shape[0]}"
 
     def read_dataframe(self) -> pd.DataFrame:
         """
