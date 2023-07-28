@@ -123,13 +123,13 @@ class AF2InputGenerator:
             use_dropout = ""
         if max_seqs:
             if not (math.log2(max_seqs).is_integer()):
-                raise ValueError("max_seqs must be a power of 2.")
+                raise ValueError("max_seq must be a power of 2.")
             
             max_seqs = f" --max-seqs {max_seqs}"
         if max_extra_seqs:
             if not (math.log2(max_seqs).is_integer()):
                 raise ValueError("max_extra_seqs must be a power of 2.")
-            max_extra_seqs = f" --max-extra-seqs {max_extra_seqs}"
+            max_extra_seqs = f" --max-extra-seq {max_extra_seqs}"
         else:
             max_extra_seqs = ""
 
