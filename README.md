@@ -7,5 +7,7 @@ Rosetta: Running basic scripts for minimisation, interface analysis and decompos
 
 Amber: Analysis and plotting the results from calculated trajectories from conventional MD. See https://github.com/Rmadeye/md_run_preparation
 
+AF2: Generation of AlphaFold2 structures and json analysis
+
 Do not forget to use proper citations for software authors!
 
