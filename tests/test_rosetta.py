@@ -8,7 +8,7 @@ root_directory = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 sys.path.append(root_directory)
 
-from tools.rosetta import parse_rosetta  as pr
+from tools.rosetta import rosetta_parser  as pr
 
 
 # Helper function to create a temporary Rosetta output file for testing

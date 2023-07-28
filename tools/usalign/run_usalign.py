@@ -51,9 +51,7 @@ class RunUSAlign:
         """
         print(f"Processing {reference_pdb} with {target_pdb}...")
 
-        target_pdb_parent_directory_path = (
-            target_pdb_parent_directory
-        ) = os.path.basename(target_pdb_parent_directory_path)
+        target_pdb_parent_directory  = os.path.basename(target_pdb)
 
         assert isinstance(reference_pdb, str) and isinstance(
             target_pdb, str

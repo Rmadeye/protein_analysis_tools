@@ -9,7 +9,7 @@ from matplotlib.pyplot import figure
 
 sys.path.append("tools/amber")
 
-import analyze_csv as ac
+import tools.amber.process_amber as ac
 
 
 class ProcessMultipleAmberOutputs:
