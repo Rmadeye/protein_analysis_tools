@@ -3,7 +3,7 @@ from typing import List, Tuple, Union
 import math
 import re
 
-class AF2_input_generator:
+class AF2InputGenerator:
     def __init__(
         self, input_fasta: Union[str, List], output_dir: Union[os.PathLike, str]
     ) -> None:
@@ -147,9 +147,3 @@ class AF2_input_generator:
                 af2exec.write(
                     f"colabfold_batch af2input_fasta.csv . --num-models {num_models} --num-recycle {num_recycles} {amber} {use_dropout} --num-seeds {num_seeds} {max_seqs} {max_extra_seqs}"
                 )
-
-
-if __name__ == "__main__":
-    test = AF2_input_generator("AGGAGGGAHAHAHAHAHA:HEHEHEHEH", "dupa")
-    test.write_af2_inputs(oligo_state=3)
-    test.write_af2_exec(max_seqs=100, max_extra_seqs=100)
