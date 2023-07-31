@@ -75,7 +75,7 @@ class AF2InputGenerator:
             if oligo_state > 1:
                 self.input_fasta = ":".join([self.input_fasta] * oligo_state)
 
-            with open(os.path.join(self.output_dir, "af2_input.fasta"), "w") as fout:
+            with open(os.path.join(self.output_dir, "af2input_fasta.csv"), "w") as fout:
                 fout.write("id,sequence\n")
                 fout.write(f"{output_name},{self.input_fasta}")
 
@@ -87,7 +87,7 @@ class AF2InputGenerator:
         amber=True,
         num_models=5,
         num_recycles=5,
-        nodes_excluded=[0, 1, 2, 3],
+        nodes_excluded=[0,1,2,3],
         memory=16,
         use_dropout=False,
         num_seeds=1,
@@ -126,6 +126,8 @@ class AF2InputGenerator:
                 raise ValueError("max_seq must be a power of 2.")
             
             max_seqs = f" --max-seqs {max_seqs}"
+        else:
+            max_seqs = ""
         if max_extra_seqs:
             if not (math.log2(max_seqs).is_integer()):
                 raise ValueError("max_extra_seqs must be a power of 2.")
@@ -133,11 +135,18 @@ class AF2InputGenerator:
         else:
             max_extra_seqs = ""
 
+        # remove whitespace from nodes_excluded
+
+
+
+
+        nodes_excluded = str(nodes_excluded).replace(" ", "")
+
 
 
         with open(os.path.join(self.output_dir, "af2_run.sh"), "w") as af2exec:
             af2exec.write(
-                f"#!/bin/bash \n\n#SBATCH -p cpu\n#SBATCH -n {n_cores}\n#SBATCH -N 1\n#SBATCH --exclude=edi0{nodes_excluded}\n#SBATCH --mem={memory}GB\n#SBATCH -J {self.output_dir}\nsource /opt/miniconda3/bin/activate cf_1.5\n"
+                f"#!/bin/bash \n\n#SBATCH -p gpu\n#SBATCH -n {n_cores}\n#SBATCH -N 1\n#SBATCH --gres=gpu:1\n#SBATCH --exclude=edi0{nodes_excluded}\n#SBATCH --mem={memory}GB\n#SBATCH -J {self.output_dir}\nsource /opt/miniconda3/bin/activate cf_1.5\n"
             )  # necessary imports for AF2 to run
             if self.input_fasta.endswith(".a3m"):
                 af2exec.write(
