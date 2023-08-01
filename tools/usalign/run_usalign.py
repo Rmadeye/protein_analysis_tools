@@ -98,3 +98,45 @@ class RunUSAlign:
                 print("Analysis encountered an error")
                 fout.write(f"{reference_pdb} FAILED WITH {target_pdb}\n")
             return 1
+        
+    def generate_slurm_job_input(self,
+        reference_pdb: Union[os.PathLike, str],
+        target_pdb_paths: Union[os.PathLike, str, list],
+        input_filelist: str,
+        input_batch_file: str,
+        output_filename: str,
+        mm=1,
+        ter=0,
+        outfmt=2,
+        nodes_excluded=[0,1,2,3],
+        memory=8,
+        )  -> str:
+
+        assert isinstance(reference_pdb, str), "Invalid path or file does not exist"
+
+        command = ( f"for pdb in $(cat {input_filelist}.txt); do " +
+                f"{self.usalign_binary} $pdb {reference_pdb} -mm {mm} -ter {ter} -outfmt {outfmt} -o >> {output_filename}"
+            )
+
+        if os.path.exists(input_filelist):
+            with open(input_batch_file,'w+') as batch_in:
+                batch_in.write(
+                    f"#!/bin/bash \n\n#SBATCH -p cpu\n#SBATCH -n 1\n#SBATCH -N 1\n#SBATCH --exclude=edi0{nodes_excluded}\n#SBATCH --mem={memory}GB\n#SBATCH -J {output_filename}\n\n"
+                )
+                batch_in.write(command)
+            return f"{input_batch_file} generated"
+        
+        else:
+            with open(input_batch_file,'w+') as batch_in:
+                batch_in.write(
+                    f"#!/bin/bash \n\n#SBATCH -p cpu\n#SBATCH -n 1\n#SBATCH -N 1\n#SBATCH --exclude=edi0{nodes_excluded}\n#SBATCH --mem={memory}GB\n#SBATCH -J {output_filename}\n\n"
+                )
+                batch_in.write(command)
+            with open(input_filelist+'txt', 'w') as fin:
+                for pdb in target_pdb_paths:
+                    fin.write(pdb + '\n')
+
+
+        return f"{input_batch_file} and {input_filelist}.txt generated"
+
+RunUSAlign("/home/nfs/rmadaj/bins/usalign/USalign").generate_slurm_job_input('test.pdb', ['test1.pdb', 'test2.pdb'], 'test', 'test.sh', 'test.txt')

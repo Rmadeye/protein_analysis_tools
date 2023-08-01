@@ -51,7 +51,7 @@ class USalign_parser:
         Returns:
             pd.DataFrame: The processed DataFrame with additional columns.
         """
-        self.df["target_path"] = self.df["target"]
+        self.df["target_path"] = self.df["target"].apply(lambda x: x.split(':')[0])
         self.df["target"] = (
             self.df["target"].str.split("/").str[-1].str.split(".").str[0]
         )
@@ -73,8 +73,16 @@ class USalign_parser:
             pd.DataFrame: A DataFrame containing the top or bottom 'n' rows based on the specified 'column'.
         """
         return self.df.sort_values(by=column, ascending=ascending).head(n)
+    
+    def add_column(self, column: str, value: Union[str, int, float]):
+        """
+        Add a column to the DataFrame with the specified value.
 
+        Parameters:
+            column (str): The name of the column to add.
+            value (str): The value to add to the column.
 
-# test = "/home/rmadeye/scripts/protein_analysis_tools/tools/usalign/usalign_output.txt"
-
-# print(USalign_parser(test).read_usalign_output())
+        Returns:
+            None
+        """
+        self.df[column] = value
