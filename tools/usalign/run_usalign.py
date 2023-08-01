@@ -89,7 +89,7 @@ class RunUSAlign:
             )
 
         result = subprocess.run(command, shell=True)
-
+        print(command)
         if result.returncode == 0:
             print("Analysis ran successfully")
             return 0
@@ -139,4 +139,4 @@ class RunUSAlign:
 
         return f"{input_batch_file} and {input_filelist}.txt generated"
 
-RunUSAlign("/home/nfs/rmadaj/bins/usalign/USalign").generate_slurm_job_input('test.pdb', ['test1.pdb', 'test2.pdb'], 'test', 'test.sh', 'test.txt')
+# RunUSAlign("/home/nfs/rmadaj/bins/usalign/USalign").generate_slurm_job_input('test.pdb', ['test1.pdb', 'test2.pdb'], 'test', 'test.sh', 'test.txt')
