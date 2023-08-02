@@ -123,12 +123,3 @@ class RosettaParser:
         """
         sns.histplot(self.df[column])
         plt.show()
-
-
-if __name__ == "__main__":
-    path = "/home/rmadeye/scripts/protein_analysis_tools/tools/rosetta/interface.sc"
-    r = RosettaParser(path)
-    r_2 = RosettaParser(r.df)
-    r_2.add_column_to_dataframe("nres_alla", "abba")
-    r_2.change_strings_in_selected_column_by_user_input("nres_alla", "ab", "dupa")
-    print(r_2.read_dataframe().nres_alla)
