@@ -2,8 +2,7 @@
 
 import os
 import subprocess
-from typing import Union, List
-from enum import Enum
+from typing import List
 
 
 class RunRosetta:

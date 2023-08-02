@@ -22,10 +22,15 @@ class USalign_parser:
         """
         if isinstance(user_input, str):
             assert os.path.exists(user_input), "Invalid path or file does not exist"
+            # load csv, drop all lines starting with #
+
+
+
             self.df = pd.read_csv(
                 user_input,
                 sep="\s+",
-                skiprows=lambda x: x % 2 != 1,
+                comment="#",
+                skip_blank_lines=True,
                 names=[
                     "target",
                     "template",
