@@ -1,5 +1,4 @@
 __pycache__/
-amber_csvs/
 test.csv
 tools/__pycache__
 .pytest_cache/
