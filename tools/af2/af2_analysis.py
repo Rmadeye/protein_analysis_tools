@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 from typing import Union, List
 
-class AF2_analysis:
+class AF2Analysis:
 
 
     def __init__(self, json_output: Union[str, List]) -> None:
@@ -59,7 +59,7 @@ class AF2_analysis:
                 'ptm': [ptm],
                 'pae': [pae],  
                 'pdb_file': [pdb_file], 
-                'rank': [rank] 
+                'rank': [rank][0] 
             })
             df = pd.concat([df,j_df], axis=0, ignore_index=True)
 
