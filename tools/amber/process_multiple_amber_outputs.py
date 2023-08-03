@@ -12,6 +12,7 @@ sys.path.append("tools/amber")
 import tools.amber.process_amber as ac
 
 
+
 class ProcessMultipleAmberOutputs:
     """
     Class to process multiple Amber simulation outputs and visualize the results.
@@ -119,8 +120,8 @@ class ProcessMultipleAmberOutputs:
             pd.DataFrame: A DataFrame containing the mean and standard deviation of the specified feature for each trajectory.
         """
         df = (
-            self.melt_dataframe()
-            .groupby("structure")[feature]
+            self.melt_dataframe().loc[self.melt_dataframe()["name"] == feature]
+            .groupby("structure")['value']
             .agg({"mean", "std"})
             .round(2)
         )
@@ -149,7 +150,14 @@ class ProcessMultipleAmberOutputs:
             plt.axvline(x, color="black", linestyle=":")
 
     def plot_feature(
-        self, feature: str, custom_ticks: list = None, vertical_lines: bool = False
+        self,
+        feature: str,
+        custom_ticks: list = None,
+        vertical_lines: bool = False,
+        png: bool = False,
+        col_wrap: int = 2,
+        height: int = 4,
+        aspect: float = 1.5,
     ):
         """
         Plot the specified feature for each trajectory.
@@ -169,9 +177,9 @@ class ProcessMultipleAmberOutputs:
         g = sns.FacetGrid(
             feature_df,
             col="structure",
-            col_wrap=4,
-            height=4,
-            aspect=1.5,
+            col_wrap=col_wrap,
+            height=height,
+            aspect=aspect,
         )
         g.map(sns.lineplot, "#Frame", "value")
         sns.set(font_scale=1.5, style="whitegrid")
@@ -190,5 +198,15 @@ class ProcessMultipleAmberOutputs:
             ),
             xticklabels=custom_ticks,
         )
-        g.savefig(f"{feature}.png")
-        return f"Figure {feature}.png saved to the current directory"
+        if png:
+            g.savefig(f"{feature}.png")
+            return f"Figure {feature}.png saved to the current directory"
+        else:
+            return "Done!"
+
+
+t=ProcessMultipleAmberOutputs(    input_csvs = glob.glob('./files/amber_csvs/*.csv'),
+    sim_length=30,
+    number_of_reps=10,
+    trajectory_dump_frequency=5000,
+    timestep=0.002)
