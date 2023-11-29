@@ -11,3 +11,24 @@ AF2: Generation of AlphaFold2 structures and json analysis
 
 Do not forget to use proper citations for software authors!
 
+
+# Installation
+1. Clone repository
+```
+git clone https://github.com/Rmadeye/protein_analysis_tools
+```
+
+2. Install all dependencies
+
+```
+pip install -r requirements.txt
+```
+
+Thank you!
+
+
+
+
+
+
+
